@@ -1,4 +1,4 @@
-name: Deploy API Guia a EC2 
+name: Deploy API Guias a EC2
 
 on:
   push:

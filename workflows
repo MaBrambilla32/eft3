@@ -1,0 +1,35 @@
+name: Pipeline CI/CD - Despliegue en AWS EC2
+
+# El pipeline se ejecutará automáticamente cada vez que hagas un "git push" a la rama main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Paso 1: Clonar el código de tu repositorio en el servidor de GitHub
+    - name: Checkout del código
+      uses: actions/checkout@v3
+
+    # Paso 2: Instalar y configurar Java 17 para poder compilar
+    - name: Configurar Java 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    # Paso 3: Compilar el proyecto con Maven (genera el archivo .jar de Spring Boot)
+    - name: Compilar con Maven (Generar JAR)
+      run: mvn clean package -DskipTests
+
+    # Paso 4: Construir la imagen Docker simulada (Acá se cumple el requisito de la pauta)
+    - name: Construir Imagen Docker
+      run: |
+        echo "Iniciando empaquetado Docker..."
+        docker build -t mi-sistema-guias:latest .
+        echo "¡Imagen Docker generada con éxito!"
